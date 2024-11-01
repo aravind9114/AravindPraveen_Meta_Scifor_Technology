@@ -14,7 +14,7 @@ def get_sp500_tickers():
 # Function to fetch news articles for a stock ticker
 def get_news_sentiment(ticker):
     api_key = "da7d2bdd6951450ca90dcbf22544dd6d"  # Replace with your News API key
-    url = f"https://newsapi.org/v2/everything?q={ticker}&apiKey={api_key}"
+    url = f"https://newsapi.org/v2/everything?q={ticker}&apiKey={api_key}&domains=forbes.com,wsj.com,reuters.com"
     response = requests.get(url).json()
 
     if response.get("status") != "ok":
@@ -50,7 +50,7 @@ def get_real_time_data(ticker, api_key):
             "Volume": int(data["06. volume"])
         }
     else:
-        st.error(f"Error fetching data for {ticker}: {response.get('Error Message', 'Unknown error')}")
+        # st.error(f"Error fetching data for {ticker}: {response.get('Error Message', 'Unknown error')}")
         return None
 
 # Create two columns
@@ -121,7 +121,7 @@ period = st.sidebar.selectbox(
 # Button to fetch and display comparison data
 st.sidebar.subheader("🔎 Stock Comparison")
 if st.sidebar.button("Compare Stocks"):
-    st.markdown("### 📊 Stock Comparison")
+    # st.markdown("### 📊 Stock Comparison")
     comparison_data = []
 
     # Individual stock display with enhanced layout and metrics
@@ -137,56 +137,139 @@ if st.sidebar.button("Compare Stocks"):
 
         # Use columns to create a card-like structure
         st.markdown(f"### 📈 {ticker} - {ticker_dict.get(ticker, 'Unknown Company')}")
-        col1, col2, col3 = st.columns([2, 2, 1])
+        st.markdown("### 🗃️ Historical Data")
+        st.markdown(
+            f"""
+            <div style='
+                border: 1px solid #d4d4d4;
+                border-radius: 10px;
+                padding: 15px;
+                margin-bottom: 20px;
+                background-color: #f9f9f9;
+                box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+                max-height: 400px;
+                overflow-y: auto;
+            '>
+                {hist_data.to_html(classes='table table-striped', index=False)}
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
 
-        # Column 1: Stock Data Table
-        with col1:
-            st.markdown("#### Historical Data")
-            st.dataframe(hist_data)
+        st.markdown("### 📊 Price and Moving Averages")
+        if period in ["1mo", "6mo", "1y", "5y", "max"]:
+            hist_data['50_MA'] = hist_data['Close'].rolling(window=50).mean()
+            hist_data['200_MA'] = hist_data['Close'].rolling(window=200).mean()
+            st.line_chart(hist_data[['Close', '50_MA', '200_MA']])
+        elif period == "5d":
+            hist_data['5_MA'] = hist_data['Close'].rolling(window=5).mean()
+            st.line_chart(hist_data[['Close', '5_MA']])
+        else:
+            st.markdown("<div style='text-align: center; color: red;'>Not enough data to calculate moving averages.</div>", unsafe_allow_html=True)
 
-        # Column 2: Line chart with moving averages (if enough data)
-        with col2:
-            st.markdown("#### Price and Moving Averages")
-            if period in ["1mo", "6mo", "1y", "5y", "max"]:
-                hist_data['50_MA'] = hist_data['Close'].rolling(window=50).mean()
-                hist_data['200_MA'] = hist_data['Close'].rolling(window=200).mean()
-                st.line_chart(hist_data[['Close', '50_MA', '200_MA']])
-            elif period == "5d":
-                hist_data['5_MA'] = hist_data['Close'].rolling(window=5).mean()
-                st.line_chart(hist_data[['Close', '5_MA']])
-            else:
-                st.write("Not enough data to calculate moving averages.")
-
-        # Column 3: Key Metrics
+        st.markdown("### 📈 Key Metrics")
         latest_data = hist_data.iloc[-1]
-        with col3:
-            st.markdown("#### Key Metrics")
-            latest_price = f"${latest_data['Close']:.2f}"
-            week_high = f"${hist_data['Close'].max():.2f}"
-            week_low = f"${hist_data['Close'].min():.2f}"
+        latest_price = f"${latest_data['Close']:.2f}"
+        week_high = f"${hist_data['Close'].max():.2f}"
+        week_low = f"${hist_data['Close'].min():.2f}"
 
-            st.metric(label="📊 Latest Price", value=latest_price)
-            st.metric(label="📈 52 Week High", value=week_high)
-            st.metric(label="📉 52 Week Low", value=week_low)
+        st.markdown(f"""
+        <div style='display: flex; flex-direction: column; gap: 20px;'>
+            <div style='
+                border: 1px solid #d4d4d4;
+                border-radius: 10px;
+                padding: 15px;
+                background-color: #f9f9f9;
+                text-align: center;
+                box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+            '>
+                <h4 style='margin-bottom: 5px;'>💰 Latest Price</h4>
+                <p style='margin: 0;'>{latest_price}</p>
+            </div>
+            <div style='
+                border: 1px solid #d4d4d4;
+                border-radius: 10px;
+                padding: 15px;
+                background-color: #f9f9f9;
+                text-align: center;
+                box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+            '>
+                <h4 style='margin-bottom: 5px;'>🔝 52 Week High</h4>
+                <p style='margin: 0;'>{week_high}</p>
+            </div>
+            <div style='
+                border: 1px solid #d4d4d4;
+                border-radius: 10px;
+                padding: 15px;
+                background-color: #f9f9f9;
+                text-align: center;
+                box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+            '>
+                <h4 style='margin-bottom: 5px;'>🔻 52 Week Low</h4>
+                <p style='margin: 0;'>{week_low}</p>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+
+
+
+
+# Optionally, add more styling or icons
+
 
         # Fetch real-time data from Alpha Vantage
         real_time_data = get_real_time_data(ticker, alpha_vantage_api_key)
         if real_time_data is None:
             st.warning("Real-time data is currently unavailable because the market is closed. Please check back during market hours for the most up-to-date information.")
-
-    # Display real-time data as usual
-
         else:
-            st.markdown("#### 📈 Real-Time Data")
-            # Organize real-time data in a more readable format
-            rt_col1, rt_col2, rt_col3 = st.columns(3)
+            st.markdown("### 📈 Real-Time Data")
+            st.markdown(
+                f"""
+                <div style='display: flex; flex-direction: row; justify-content: space-around; gap: 20px; margin-top: 20px;'>
+                    <div style='
+                        border: 1px solid #d4d4d4;
+                        border-radius: 10px;
+                        padding: 15px;
+                        background-color: #f9f9f9;
+                        text-align: center;
+                        box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+                        flex: 1;
+                    '>
+                        <h4 style='margin-bottom: 5px;'>💰 Current Price</h4>
+                        <p style='margin: 0;'>{f"${real_time_data['Current Price']:.2f}"}</p>
+                    </div>
+                    <div style='
+                        border: 1px solid #d4d4d4;
+                        border-radius: 10px;
+                        padding: 15px;
+                        background-color: #f9f9f9;
+                        text-align: center;
+                        box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+                        flex: 1;
+                    '>
+                        <h4 style='margin-bottom: 5px;'>📈 Change</h4>
+                        <p style='margin: 0; color: {"green" if float(real_time_data["Change Percent"].strip("%")) >= 0 else "red"};'>
+                            {f"{real_time_data['Change Percent']}"}
+                        </p>
+                    </div>
+                    <div style='
+                        border: 1px solid #d4d4d4;
+                        border-radius: 10px;
+                        padding: 15px;
+                        background-color: #f9f9f9;
+                        text-align: center;
+                        box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+                        flex: 1;
+                    '>
+                        <h4 style='margin-bottom: 5px;'>📊 Volume</h4>
+                        <p style='margin: 0;'>{f"{real_time_data['Volume']:,}"}</p>
+                    </div>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
 
-            with rt_col1:
-                st.metric(label="Current Price", value=f"${real_time_data['Current Price']:.2f}")
-            with rt_col2:
-                st.metric(label="Change Percent", value=f"{real_time_data['Change Percent']}")
-            with rt_col3:
-                st.metric(label="Volume", value=f"{real_time_data['Volume']:,}")
 
         st.markdown("#### 📉 Candlestick Chart")
 
@@ -226,13 +309,29 @@ if st.sidebar.button("Compare Stocks"):
 
         # Fetch and display news sentiment for the selected ticker
         st.markdown(f"### 📰 News Sentiment for {ticker}")
-        news_sentiment_data = get_news_sentiment(ticker)
 
+        news_sentiment_data = get_news_sentiment(ticker)
         if news_sentiment_data:
             for news in news_sentiment_data:
-                st.write(f"**Headline:** {news['Headline']}")
-                st.write(f"**Sentiment:** {news['Sentiment']}")
-                st.markdown("---")
+                st.markdown(
+                    f"""
+                    <div style='
+                        border: 1px solid #d4d4d4;
+                        border-radius: 10px;
+                        padding: 15px;
+                        margin: 15px 0;
+                        background-color: #f9f9f9;
+                        box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+                    '>
+                        <h4 style='margin-bottom: 10px;'>📌 {news['Headline']}</h4>
+                        <p style='margin: 0;'><strong>Sentiment:</strong> {news['Sentiment']}</p>
+                        <small><em>Source: Your Trusted News API</em></small>
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+
+
 
      except Exception as e:
         st.error(f"Error processing data for {ticker}: {e}")
@@ -288,7 +387,7 @@ if st.sidebar.button("📖 How to Use This App"):
     - You will see a combination of historical data, price trends, key metrics, and real-time data for each selected stock.
 
     #### 4. **Analyze Historical Data**
-    - Each stock’s historical data will be displayed in a table format, showing the stock prices over the chosen time period.
+    - Each stock's historical data will be displayed in a table format, showing the stock prices over the chosen time period.
 
     #### 5. **View Price Trends**
     - The app includes line charts and candlestick charts to visualize stock price movements and patterns.
