@@ -236,7 +236,7 @@ if st.sidebar.button("Compare Stocks"):
                         box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
                         flex: 1;
                     '>
-                        <h4 style='margin-bottom: 5px;'>💰 Current Price</h4>
+                        <h5 style='margin-bottom: 5px;'>💰 Current Price</h5>
                         <p style='margin: 0;'>{f"${real_time_data['Current Price']:.2f}"}</p>
                     </div>
                     <div style='
@@ -248,7 +248,7 @@ if st.sidebar.button("Compare Stocks"):
                         box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
                         flex: 1;
                     '>
-                        <h4 style='margin-bottom: 5px;'>📈 Change</h4>
+                        <h5 style='margin-bottom: 5px;'>📈 Change</h5>
                         <p style='margin: 0; color: {"green" if float(real_time_data["Change Percent"].strip("%")) >= 0 else "red"};'>
                             {f"{real_time_data['Change Percent']}"}
                         </p>
@@ -262,7 +262,7 @@ if st.sidebar.button("Compare Stocks"):
                         box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
                         flex: 1;
                     '>
-                        <h4 style='margin-bottom: 5px;'>📊 Volume</h4>
+                        <h5 style='margin-bottom: 5px;'>📊 Volume</h5>
                         <p style='margin: 0;'>{f"{real_time_data['Volume']:,}"}</p>
                     </div>
                 </div>
