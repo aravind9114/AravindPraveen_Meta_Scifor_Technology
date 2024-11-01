@@ -171,7 +171,12 @@ if st.sidebar.button("Compare Stocks"):
 
         # Fetch real-time data from Alpha Vantage
         real_time_data = get_real_time_data(ticker, alpha_vantage_api_key)
-        if real_time_data:
+        if real_time_data is None:
+            st.warning("Real-time data is currently unavailable because the market is closed. Please check back during market hours for the most up-to-date information.")
+
+    # Display real-time data as usual
+
+        else:
             st.markdown("#### 📈 Real-Time Data")
             # Organize real-time data in a more readable format
             rt_col1, rt_col2, rt_col3 = st.columns(3)
