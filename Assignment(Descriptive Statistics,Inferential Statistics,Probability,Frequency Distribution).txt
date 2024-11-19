@@ -1,0 +1,122 @@
+﻿1. Descriptive Statistics
+Descriptive statistics summarise and describe the main characteristics of a dataset.
+Key Measures and Real-World Examples
+a. Measures of Central Tendency
+1. Mean (Average)
+Formula:
+Mean = ΣX / n
+Example:
+Monthly sales (in units) for a store: [120, 150, 180, 200, 250]
+Calculation:
+Mean = (120 + 150 + 180 + 200 + 250) / 5 = 180
+Interpretation: The store sells an average of 180 units per month.
+2. Median
+Example:
+Sales data: [120, 150, 180, 200, 250]
+Sorted order: [120, 150, 180, 200, 250]
+The middle value is 180.
+3. Mode
+The most frequent value in the dataset.
+Example:
+Customer satisfaction ratings: [4, 4, 5, 3, 4, 3, 5, 4]
+Mode = 4 (most frequent).
+b. Measures of Dispersion
+   1. Range
+Formula:
+Range = Maximum Value - Minimum Value
+Example:
+Sales data: [120, 150, 180, 200, 250]
+Range = 250 - 120 = 130
+   2. Variance and Standard Deviation
+Variance Formula:
+Variance (σ²) = Σ(Xᵢ - 𝑋̄)² / n
+Standard Deviation Formula:
+Standard Deviation (σ) = √Variance
+Example:
+Daily temperatures: [30, 32, 34, 36, 38]
+      * Mean = 34
+      * Variance = [(30 - 34)² + (32 - 34)² + (34 - 34)² + (36 - 34)² + (38 - 34)²] / 5 = 8
+      * Standard Deviation = √8 = 2.83
+
+
+2. Inferential Statistics
+Inferential statistics help draw conclusions about a population based on sample data.
+Key Concepts and Real-World Examples
+a. Hypothesis Testing
+      * Null Hypothesis (H₀): There is no difference/effect.
+      * Alternative Hypothesis (Hₐ): There is a difference/effect.
+Example:
+Does a new marketing strategy increase sales?
+      * Sales before strategy: [200, 210, 215, 220, 230]
+      * Sales after strategy: [250, 260, 270, 280, 300]
+Interpretation: If p < 0.05, the difference is statistically significant.
+b. Confidence Intervals (CI)
+Formula:
+CI = 𝑋̄ ± Z × (σ / √n)
+Example:
+      * Sample mean = 180, Std Dev = 15, n = 25, Z = 1.96
+      * CI = 180 ± 1.96 × (15 / √25)
+      * CI = (174.12, 185.88)
+
+
+3. Probability
+Probability quantifies the likelihood of events.
+Key Concepts and Real-World Examples
+a. Simple Probability
+Example:
+A bag contains 5 red, 3 blue, and 2 green balls.
+      * Total balls = 5 + 3 + 2 = 10
+      * Probability (P) = Favourable Outcomes / Total Outcomes
+      * P(Blue) = 3 / 10 = 0.3
+
+
+b. Conditional Probability
+Formula:
+P(A | B) = P(A ∩ B) / P(B)
+Example:
+A factory produces 60% A-grade items and 40% B-grade items. If 5% of A-grade and 10% of B-grade items are defective, what is the probability that a defective item is A-grade?
+We are given:
+      * P(A) = 0.60 (probability that an item is A-grade)
+      * P(B) = 0.40 (probability that an item is B-grade)
+      * P(D | A) = 0.05 (probability that an A-grade item is defective)
+      * P(D | B) = 0.10 (probability that a B-grade item is defective)
+We want to find P(A | D), the probability that a defective item is A-grade.
+Bayes' Theorem:
+Bayes' Theorem states:
+P(A | D) = (P(D | A) * P(A)) / P(D)
+Where:
+      * P(A | D) is the probability that the item is A-grade given that it is defective.
+      * P(D | A) is the probability that an A-grade item is defective.
+      * P(A) is the probability that an item is A-grade.
+      * P(D) is the total probability that an item is defective.
+To calculate P(D) (the total probability of a defective item), we use the law of total probability:
+P(D) = P(D | A) * P(A) + P(D | B) * P(B)
+Step 1: Calculate P(D)
+P(D) = (0.05 * 0.60) + (0.10 * 0.40) P(D) = 0.03 + 0.04 P(D) = 0.07
+Step 2: Apply Bayes' Theorem
+Now, we can calculate P(A | D):
+P(A | D) = (0.05 * 0.60) / 0.07 P(A | D) = 0.03 / 0.07 P(A | D) ≈ 0.4286
+Conclusion:
+The probability that a defective item is A-grade is approximately 0.4286 or 42.86%.
+
+
+c. Bayes’ Theorem
+Formula:
+P(A | B) = [P(B | A) × P(A)] / P(B)
+4. Frequency Distribution
+Frequency distribution shows how often each value occurs.
+Example: Exam scores: [70, 80, 90, 70, 80, 90, 90, 100, 70]
+
+
+Score   Frequency
+  70                3
+  80                2
+  90                3
+ 100               1
+
+
+
+
+
+
+Example Graphs : Example_Graphs.ipynb
