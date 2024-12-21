@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Fitness Tracker</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f2f2f2;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            color: #333;
+        }
+        h2 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .form-container {
+            background-color: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 400px;
+        }
+        .form-container label {
+            display: block;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            text-align: left;
+        }
+        .form-container input {
+            padding: 0.75rem;
+            margin-bottom: 1rem;
+            width: 100%;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        .form-container input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 5px rgba(52, 152, 219, 0.5);
+        }
+        .form-container button {
+            padding: 0.75rem;
+            background-color: #3498db;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+            transition: background-color 0.3s ease;
+        }
+        .form-container button:hover {
+            background-color: #2980b9;
+        }
+        .message {
+            font-size: 1rem;
+            margin-top: 1.5rem;
+            color: #555;
+        }
+        .message a {
+            color: #3498db;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .message a:hover {
+            text-decoration: underline;
+        }
+        .fitness-icons {
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+            gap: 1.5rem;
+        }
+        .fitness-icons i {
+            font-size: 2.5rem;
+            color: #3498db;
+            transition: color 0.3s ease;
+        }
+        .fitness-icons i:hover {
+            color: #e74c3c;
+        }
+        @media (max-width: 768px) {
+            h2 {
+                font-size: 2rem;
+            }
+            .form-container {
+                padding: 1.5rem;
+            }
+            .form-container button {
+                font-size: 0.9rem;
+            }
+            .fitness-icons i {
+                font-size: 2rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <h2>Register for Fitness Tracker</h2>
+
+    <div class="form-container">
+        {% if messages %}
+            <ul style="color: red; text-align: left; padding: 0; list-style: none;">
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        <form method="POST">
+            {% csrf_token %}
+
+            <!-- Username field -->
+            <label for="username">Username:</label>
+            <input type="text" name="username" id="username" placeholder="Enter your username" required>
+
+            <!-- Email field -->
+            <label for="email">Email:</label>
+            <input type="email" name="email" id="email" placeholder="Enter your email" required>
+
+            <!-- Password field -->
+            <label for="password">Password:</label>
+            <input type="password" name="password" id="password" placeholder="Enter your password" required>
+
+            <!-- Submit button -->
+            <button type="submit">Register</button>
+        </form>
+    </div>
+
+    <div class="message">
+        <p>Already have an account? <a href="{% url 'login' %}">Login here</a>.</p>
+    </div>
+
+    <div class="fitness-icons">
+        <i class="fas fa-dumbbell"></i>
+        <i class="fas fa-running"></i>
+        <i class="fas fa-heartbeat"></i>
+        <i class="fas fa-bicycle"></i>
+    </div>
+</body>
+
+</html>

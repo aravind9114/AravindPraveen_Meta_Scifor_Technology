@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fitness History</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            font-size: 36px;
+            margin-bottom: 20px;
+        }
+        .chart-container {
+            width: 80%;
+            margin: 20px auto;
+        }
+        canvas {
+            max-width: 100%;
+            height: 400px;
+        }
+        table {
+            width: 90%;
+            margin: 40px auto;
+            border-collapse: collapse;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+        }
+        td {
+            background-color: #f9f9f9;
+        }
+        tr:hover td {
+            background-color: #f2f2f2;
+        }
+        .chart-container {
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        footer {
+            margin-top: 30px;
+            color: #888;
+            font-size: 14px;
+        }
+        footer a {
+            text-decoration: none;
+            color: #3498db;
+        }
+        footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <h1>Fitness History</h1>
+
+    <!-- BMI Graph -->
+    <div class="chart-container">
+        <canvas id="bmiChart"></canvas>
+    </div>
+
+    <!-- Step Count Graph -->
+    <div class="chart-container">
+        <canvas id="stepCountChart"></canvas>
+    </div>
+
+    <!-- Distance Graph -->
+    <div class="chart-container">
+        <canvas id="distanceChart"></canvas>
+    </div>
+
+    <!-- Sleep Duration Graph -->
+    <div class="chart-container">
+        <canvas id="sleepChart"></canvas>
+    </div>
+
+    <!-- Stress Level Graph -->
+    <div class="chart-container">
+        <canvas id="stressLevelChart"></canvas>
+    </div>
+
+    <!-- Hydration Level Graph -->
+    <div class="chart-container">
+        <canvas id="hydrationLevelChart"></canvas>
+    </div>
+
+    <!-- BMR Graph -->
+    <div class="chart-container">
+        <canvas id="bmrChart"></canvas>
+    </div>
+
+    <!-- TDEE Graph -->
+    <div class="chart-container">
+        <canvas id="tdeeChart"></canvas>
+    </div>
+
+    
+
+    <!-- Fitness Data Table -->
+    <table id="fitnessDataTable">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>BMI</th>
+                <th>Step Count</th>
+                <th>Distance (km)</th>
+                <th>Sleep Duration (hrs)</th>
+                <th>Stress Level</th>
+                <th>Hydration Level</th>
+                <th>BMR</th>
+                <th>TDEE</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Table rows will be populated by JavaScript -->
+        </tbody>
+    </table>
+
+    <footer>
+        <a href="{% url 'fitness_form' %}">Go Back</a>
+    </footer>
+    
+    
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Parse JSON data passed from Django
+            const fitnessData = JSON.parse('{{ fitness_data_json|escapejs }}');
+
+            // Extract labels (dates) and datasets for each metric
+            const labels = fitnessData.map(data => data.created_at);
+            const bmiData = fitnessData.map(data => data.bmi);
+            const stepCountData = fitnessData.map(data => data.step_count || 0);
+            const distanceData = fitnessData.map(data => data.calculated_distance || 0);
+            const sleepData = fitnessData.map(data => data.sleep_duration || 0);
+            const stressLevelData = fitnessData.map(data => data.stress_level || 0);
+            const hydrationLevelData = fitnessData.map(data => data.hydration_level || 0);
+            const bmrData = fitnessData.map(data => data.bmr || 0);
+            const tdeeData = fitnessData.map(data => data.tdee || 0);
+            const statusData = fitnessData.map(data => data.status);
+
+            // Create BMI Chart
+            new Chart(document.getElementById('bmiChart'), {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'BMI',
+                        data: bmiData,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 2,
+                        fill: false
+                    }]
+                },
+            });
+
+            // Create Step Count Chart
+            new Chart(document.getElementById('stepCountChart'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Step Count',
+                        data: stepCountData,
+                        backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                        borderColor: 'rgba(54, 162, 235, 1)',
+                        borderWidth: 1
+                    }]
+                },
+            });
+
+            // Create Distance Chart
+            new Chart(document.getElementById('distanceChart'), {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Distance (km)',
+                        data: distanceData,
+                        borderColor: 'rgba(153, 102, 255, 1)',
+                        borderWidth: 2,
+                        fill: false
+                    }]
+                },
+            });
+
+            // Create Sleep Duration Chart
+            new Chart(document.getElementById('sleepChart'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Sleep Duration (hrs)',
+                        data: sleepData,
+                        backgroundColor: 'rgba(255, 159, 64, 0.6)',
+                        borderColor: 'rgba(255, 159, 64, 1)',
+                        borderWidth: 1
+                    }]
+                },
+            });
+
+            // Create Stress Level Chart
+            new Chart(document.getElementById('stressLevelChart'), {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Stress Level',
+                        data: stressLevelData,
+                        backgroundColor: 'rgba(255, 99, 132, 0.6)',
+                        borderColor: 'rgba(255, 99, 132, 1)',
+                        borderWidth: 1
+                    }]
+                },
+            });
+
+            // Create Hydration Level Chart
+            new Chart(document.getElementById('hydrationLevelChart'), {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Hydration Level',
+                        data: hydrationLevelData,
+                        borderColor: 'rgba(255, 206, 86, 1)',
+                        borderWidth: 2,
+                        fill: false
+                    }]
+                },
+            });
+
+            // Create BMR Chart
+            new Chart(document.getElementById('bmrChart'), {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'BMR',
+                        data: bmrData,
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        borderWidth: 2,
+                        fill: false
+                    }]
+                },
+            });
+
+            // Create TDEE Chart
+            new Chart(document.getElementById('tdeeChart'), {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'TDEE',
+                        data: tdeeData,
+                        borderColor: 'rgba(153, 102, 255, 1)',
+                        borderWidth: 2,
+                        fill: false
+                    }]
+                },
+            });
+
+            // Populate table with data
+            const tableBody = document.getElementById('fitnessDataTable').getElementsByTagName('tbody')[0];
+            fitnessData.forEach(data => {
+                const row = tableBody.insertRow();
+                row.insertCell(0).textContent = data.created_at;
+                row.insertCell(1).textContent = data.bmi;
+                row.insertCell(2).textContent = data.step_count || 0;
+                row.insertCell(3).textContent = data.calculated_distance || 0;
+                row.insertCell(4).textContent = data.sleep_duration || 0;
+                row.insertCell(5).textContent = data.stress_level || 0;
+                row.insertCell(6).textContent = data.hydration_level || 0;
+                row.insertCell(7).textContent = data.bmr || 0;
+                row.insertCell(8).textContent = data.tdee || 0;
+                row.insertCell(9).textContent = data.status;
+            });
+        });
+    </script>
+</body>
+</html>
