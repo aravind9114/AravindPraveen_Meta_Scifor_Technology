@@ -32,7 +32,8 @@ SECRET_KEY = 'django-insecure-!my)f@4q!%cce7wja(au+_oj%%%wk7p0jb)b7$-(lia)&wq%(p
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['majorproject-production-8cb6.up.railway.app', 'localhost', '127.0.0.1']
+
 
 
 # Application definition
@@ -55,6 +56,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    
 ]
 
 ROOT_URLCONF = 'myproject.urls'
@@ -122,6 +124,8 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
+CSRF_TRUSTED_ORIGINS = ['https://majorproject-production-8cb6.up.railway.app']
+
 
 STATIC_URL = 'static/'
 

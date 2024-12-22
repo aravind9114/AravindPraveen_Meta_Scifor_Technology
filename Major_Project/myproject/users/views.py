@@ -93,8 +93,9 @@ from .models import FitnessData
 
 def fitness_view(request):
     # Load model and scaler
-    model = joblib.load(r'C:\Users\ASUS\OneDrive\Desktop\Major_Project\myproject\Random_forest_Fitness_correct.pkl')
-    scaler = joblib.load(r'C:\Users\ASUS\OneDrive\Desktop\Major_Project\myproject\Fitness_scaler_correct.pkl')
+    model = joblib.load(r'models/Random_forest_Fitness_correct.pkl')
+
+    scaler = joblib.load(r'models/Fitness_scaler_correct.pkl')
 
     if request.method == 'POST':
         form = FitnessForm(request.POST)
